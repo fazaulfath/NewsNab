@@ -5,6 +5,11 @@ class NewsSpider(scrapy.Spider):
     allowed_domains = ["www.timesnownews.com"]
     start_urls = ["https://www.timesnownews.com/latest-news"]
 
+    # Add custom settings to disable HTTP caching
+    custom_settings = {
+        'HTTPCACHE_ENABLED': False
+    }
+
     def parse(self, response):
         # Ensure we're selecting the correct elements
         news_items = response.css("div._1W5s")
