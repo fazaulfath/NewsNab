@@ -12,6 +12,10 @@ BOT_NAME = "new_scrape"
 SPIDER_MODULES = ["new_scrape.spiders"]
 NEWSPIDER_MODULE = "new_scrape.spiders"
 
+from scrapy.core.downloader.tls import ScrapyClientTLSOptions
+ScrapyClientTLSOptions.ssl_options = {
+    'ciphers': 'DEFAULT:!SSLv3'
+}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "new_scrape (+http://www.yourdomain.com)"
