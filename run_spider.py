@@ -1,4 +1,13 @@
 import os
+import sys
+
+# Set the reactor type
+os.environ['TWISTED_REACTOR'] = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
+
+# Now import Scrapy and other modules
+import scrapy
+from scrapy.crawler import CrawlerProcess
+
 import json
 import subprocess
 
