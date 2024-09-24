@@ -12,23 +12,31 @@ def run_spider():
     else:
         existing_news = []
 
-    # Run the spider in a separate process to avoid ReactorNotRestartable error
-    subprocess.run(["scrapy", "runspider", "news.py", "-o", "temp_latest_news.json", "-t", "json"])
+    # Run the spider in a separate process
+    try:
+        subprocess.run(["scrapy", "runspider", "news.py", "-o", "temp_latest_news.json", "-t", "json"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error running spider: {e}")
+        return  # Exit the function if the spider fails
 
-    # Load the new data
-    with open("temp_latest_news.json", 'r') as file:
-        new_news = json.load(file)
+    # Check if the temporary file was created
+    if os.path.exists("temp_latest_news.json"):
+        # Load the new data
+        with open("temp_latest_news.json", 'r') as file:
+            new_news = json.load(file)
 
-    # Filter out duplicates
-    existing_links = {news['news_link'] for news in existing_news}
-    unique_news = [news for news in new_news if news['news_link'] not in existing_links]
+        # Filter out duplicates
+        existing_links = {news['news_link'] for news in existing_news}
+        unique_news = [news for news in new_news if news['news_link'] not in existing_links]
 
-    # Append new unique news to existing news
-    updated_news = existing_news + unique_news
+        # Append new unique news to existing news
+        updated_news = existing_news + unique_news
 
-    # Save the updated news to the output file
-    with open(output_file, 'w') as file:
-        json.dump(updated_news, file, indent=4)
+        # Save the updated news to the output file
+        with open(output_file, 'w') as file:
+            json.dump(updated_news, file, indent=4)
 
-    # Remove the temporary file
-    os.remove("temp_latest_news.json")
+        # Remove the temporary file
+        os.remove("temp_latest_news.json")
+    else:
+        print("Temporary news file not found. Please check the spider output.")
