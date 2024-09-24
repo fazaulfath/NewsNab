@@ -1,2 +1,4 @@
-Scrapy==2.6.1
-pyOpenSSL>=23.0.0
+scrapy
+pyOpenSSL
+twisted
+service_identity
